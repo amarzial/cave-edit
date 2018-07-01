@@ -1,5 +1,8 @@
 #ifndef __FILE_EDITOR__
 #define __FILE_EDITOR__
+
+#include "utils.hpp"
+
 #include <array>
 #include <fstream>
 #include <iostream>
@@ -33,10 +36,10 @@ struct PlayerInfo {
     e_weapons = 0x38,
     e_inventory = 0xd8
   };
-  std::uint16_t current_health;
-  std::uint16_t maximum_health;
-  std::uint16_t whimsical_stars;
-  std::array<Weapon, 5> weapons;
+  std::uint32_t current_health;
+  std::uint32_t maximum_health;
+  std::uint32_t whimsical_stars;
+  std::array<Weapon, 6> weapons;
   std::array<std::uint32_t, 24> inventory;
 };
 
@@ -54,11 +57,7 @@ class FileEditor {
   bool get_flag(int id);
   const std::vector<FlagInfo>& flag_list() { return m_flags; }
 
-  void print_player() {
-    std::cout << "Player info:\nHealth: " << m_player.current_health << "/"
-              << m_player.maximum_health
-              << "\nWhimsical stars: " << m_player.whimsical_stars << "\n";
-  }
+  void print_player();
 
   void save();
 };

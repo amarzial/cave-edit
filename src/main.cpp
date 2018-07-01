@@ -10,8 +10,7 @@ int main(int ac, char* av[]) {
     std::cout << flag.description << " = " << (flag.status ? "true" : "false")
               << "\n";
   }
-
-  
+  savefile.print_player();
 
   return 0;
 }
