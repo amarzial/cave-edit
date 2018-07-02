@@ -3,11 +3,7 @@
 
 #include <cstdint>
 
-template <class T>
-void int_to_raw(T val, char *buff) {
-  for (auto i = 0u; i < sizeof(T); ++i) buff[i] = val << (i * 8);
-}
-
+void int_to_raw(std::uint32_t val, char *buff, int bytes);
 std::uint32_t raw_to_int(char *buff, int bytes);
 
 #endif

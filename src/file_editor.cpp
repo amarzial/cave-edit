@@ -1,7 +1,7 @@
 #include "file_editor.hpp"
+#include "flag.hpp"
 #include "utils.hpp"
 #include "weapon.hpp"
-#include "flag.hpp"
 
 #include <fstream>
 #include <string>
@@ -20,11 +20,22 @@ FileEditor::FileEditor(const std::string& filename, int profile)
   load_profile();
 }
 
+FileEditor::~FileEditor() { m_file.close(); }
+
 void FileEditor::set_flag(int id, bool active) {
-  if (id < 0 or id > m_flags.size()) {
+  auto flist = flag::list();
+  if (id < 0 or id > flist.size()) {
     throw "Trying to access an invalid flag";
     return;
   }
+  const auto& finfo = flist[id];
+  auto& flag = m_flags[finfo.offset - Player::offset::e_flags];
+  if (active) {
+    flag.data |= 1 << finfo.bit;
+  } else {
+    flag.data &= ~(1 << finfo.bit);
+  }
+  flag.changed = true;
 }
 
 bool FileEditor::get_flag(int id) {
@@ -35,13 +46,12 @@ bool FileEditor::get_flag(int id) {
   }
   bool f;
   const auto& finfo = flist[id];
-  f = m_flags[finfo.offset - PlayerInfo::offset::e_flags].data &
-      (1 << finfo.bit);
+  f = m_flags[finfo.offset - Player::offset::e_flags].data & (1 << finfo.bit);
   return f;
 }
 
 void FileEditor::load_profile() {
-  int profile_offset = (m_save_slot - 1) * PlayerInfo::offset::e_profile;
+  int profile_offset = (m_save_slot - 1) * Player::offset::e_profile;
 
   auto get_val = [this, profile_offset](std::uint32_t& val, int offset,
                                         int size) {
@@ -51,11 +61,11 @@ void FileEditor::load_profile() {
     val = raw_to_int(buff, size);
   };
 
-  get_val(m_player.current_health, PlayerInfo::offset::e_current_health, 2);
-  get_val(m_player.whimsical_stars, PlayerInfo::offset::e_whimsical_stars, 2);
-  get_val(m_player.maximum_health, PlayerInfo::offset::e_max_health, 2);
+  get_val(m_player.current_health, Player::offset::e_current_health, 2);
+  get_val(m_player.whimsical_stars, Player::offset::e_whimsical_stars, 2);
+  get_val(m_player.maximum_health, Player::offset::e_max_health, 2);
 
-  std::uint32_t offset = PlayerInfo::offset::e_weapons;
+  std::uint32_t offset = Player::offset::e_weapons;
   for (auto& w : m_player.weapons) {
     get_val(w.id, offset, 4);
     offset += 4;
@@ -69,13 +79,13 @@ void FileEditor::load_profile() {
     offset += 4;
   }
 
-  offset = PlayerInfo::offset::e_inventory;
+  offset = Player::offset::e_inventory;
   for (auto& itm : m_player.inventory) {
     get_val(itm, offset, 4);
     offset += 4;
   }
 
-  m_file.seekg(PlayerInfo::offset::e_flags + profile_offset);
+  m_file.seekg(Player::offset::e_flags + profile_offset);
   for (auto& flag : m_flags) {
     char byte;
     m_file.read(&byte, 1);
@@ -102,8 +112,32 @@ void FileEditor::print_flags() {
   const auto& flist = flag::list();
 
   for (const auto flag : flist) {
-    auto f = m_flags[flag.offset - PlayerInfo::offset::e_flags].data &
-             (1 << flag.bit);
+    auto f =
+        m_flags[flag.offset - Player::offset::e_flags].data & (1 << flag.bit);
     std::cout << flag.description << " = " << (f ? "true" : "false") << "\n";
+  }
+}
+
+void FileEditor::save() {
+  int profile_offset = (m_save_slot - 1) * Player::offset::e_profile;
+
+  if (m_modified) {
+    auto store_val = [this, profile_offset](std::int32_t val, int offset,
+                                            int size) {
+      char buff[4];
+      int_to_raw(val, buff, size);
+      m_file.seekg(offset + profile_offset);
+      m_file.write(buff, size);
+    };
+    store_val(m_player.current_health, Player::offset::e_current_health, 2);
+    store_val(m_player.maximum_health, Player::offset::e_max_health, 2);
+    store_val(m_player.whimsical_stars, Player::offset::e_whimsical_stars, 2);
+    for (auto i = 0u; i < m_flags.size(); ++i) {
+      if (m_flags[i].changed) {
+        m_file.seekg(i + Player::offset::e_flags + profile_offset);
+        m_file.write(&(m_flags[i].data), 1);
+      }
+    }
+    m_file.flush();
   }
 }
