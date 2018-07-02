@@ -9,15 +9,9 @@
 #include <string>
 #include <vector>
 
-struct FlagInfo {
-  int offset;
-  char bit;
-  std::string description;
-  bool status;
+struct FlagByte {
+  char data;
   bool changed;
-
-  FlagInfo(int off, char b, const std::string& s)
-      : offset(off), bit(b), description(s), status(false), changed(false) {}
 };
 
 struct Weapon {
@@ -34,7 +28,10 @@ struct PlayerInfo {
     e_whimsical_stars = 0x1e,
     e_current_health = 0x20,
     e_weapons = 0x38,
-    e_inventory = 0xd8
+    e_inventory = 0xd8,
+    e_flags = 0x21c,
+    e_flags_end = 0x603,
+    e_profile = 0x620
   };
   std::uint32_t current_health;
   std::uint32_t maximum_health;
@@ -44,20 +41,24 @@ struct PlayerInfo {
 };
 
 class FileEditor {
-  std::vector<FlagInfo> m_flags;
+  std::array<FlagByte,
+             PlayerInfo::offset::e_flags_end - PlayerInfo::offset::e_flags>
+      m_flags;
   std::fstream m_file;
+  int m_save_slot;
   PlayerInfo m_player;
+  bool m_modified;
 
-  void load_player();
+  void load_profile();
 
  public:
-  FileEditor(const std::string& filename);
+  FileEditor(const std::string& filename, int profile = 1);
 
   void set_flag(int id, bool active);
   bool get_flag(int id);
-  const std::vector<FlagInfo>& flag_list() { return m_flags; }
 
   void print_player();
+  void print_flags();
 
   void save();
 };

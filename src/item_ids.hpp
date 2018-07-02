@@ -1,3 +1,7 @@
+#ifndef __ITEM_IDS__
+#define __ITEM_IDS__
+
+// clang-format off
 {0x00, "None"},
 {0x01, "Arthur's Key"},
 {0x02, "Map System"},
@@ -38,3 +42,6 @@
 {0x25, "Chako's Rouge"},
 {0x26, "Whimsical Star"},
 {0x27, "Iron Bond"},
+// clang-format on
+
+#endif

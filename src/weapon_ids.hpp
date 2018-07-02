@@ -1,3 +1,7 @@
+#ifndef __WEAPON_IDS__
+#define __WEAPON_IDS__
+
+// clang-format off
 {0, "None"},
 {0x00, "None"},
 {0x01, "Snake"},
@@ -14,3 +18,6 @@
 {0x0C, "Nemesis"},
 {0x0D, "Spur"},
 {0x0E, "\"Hajime\" [Bad] "},
+// clang-format on
+
+#endif
