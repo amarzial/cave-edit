@@ -8,7 +8,7 @@ const std::vector<WeaponElem>& list() {
   return s_list;
 }
 
-std::string get_name(int id) {
+std::string get_name(unsigned int id) {
   auto l = list();
   for (const auto& w : l) {
     if (w.id == id) {

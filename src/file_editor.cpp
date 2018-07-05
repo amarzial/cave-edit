@@ -22,9 +22,9 @@ FileEditor::FileEditor(const std::string& filename, int profile)
 
 FileEditor::~FileEditor() { m_file.close(); }
 
-void FileEditor::set_flag(int id, bool active) {
+void FileEditor::set_flag(unsigned int id, bool active) {
   auto flist = flag::list();
-  if (id < 0 or id > flist.size()) {
+  if (id > flist.size()) {
     throw "Trying to access an invalid flag";
     return;
   }
@@ -38,9 +38,9 @@ void FileEditor::set_flag(int id, bool active) {
   flag.changed = true;
 }
 
-bool FileEditor::get_flag(int id) {
+bool FileEditor::get_flag(unsigned int id) {
   auto flist = flag::list();
-  if (id < 0 or id > flist.size()) {
+  if (id > flist.size()) {
     throw "Trying to access an invalid flag";
     return false;
   }

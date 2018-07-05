@@ -10,7 +10,7 @@ struct WeaponElem {
   std::string name;
 };
 
-std::string get_name(int id);
+std::string get_name(unsigned int id);
 int get_id(const std::string);
 
 const std::vector<WeaponElem>& list();

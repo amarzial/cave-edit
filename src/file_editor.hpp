@@ -62,8 +62,8 @@ class FileEditor {
   FileEditor(const std::string& filename, int profile = 1);
   ~FileEditor();
 
-  void set_flag(int id, bool active);
-  bool get_flag(int id);
+  void set_flag(unsigned int id, bool active);
+  bool get_flag(unsigned int id);
 
   void print_player();
   void print_flags();
