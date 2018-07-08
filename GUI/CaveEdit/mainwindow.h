@@ -18,6 +18,8 @@ public:
 
 private:
     void panico(QListWidgetItem *itm);
+
+    Ui::MainWindow *ui;
 };
 
 #endif // MAINWINDOW_H

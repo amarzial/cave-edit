@@ -62,6 +62,9 @@ class FileEditor {
   FileEditor(const std::string& filename, int profile = 1);
   ~FileEditor();
 
+  auto current_health() const {return m_player.current_health;}
+  auto max_health() const {return m_player.maximum_health;}
+
   void set_flag(unsigned int id, bool active);
   bool get_flag(unsigned int id);
 

@@ -1,8 +1,11 @@
+#include "ui_mainwindow.h"
+
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QCoreApplication>
+#include <QTabWidget>
 
 #include "mainwindow.h"
 #include "caveedit/file_editor.hpp"
@@ -11,12 +14,9 @@
 #include <string>
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent)
+    QMainWindow(parent), ui(new Ui::MainWindow)
 {
-    QWidget *wdg = new QWidget(this);
-    QVBoxLayout *lay = new QVBoxLayout;
-    QListWidget *list = new QListWidget(wdg);
-
+    ui->setupUi(this);
     auto args = QCoreApplication::arguments();
     if (args.size() < 2)
         return;
@@ -25,20 +25,15 @@ MainWindow::MainWindow(QWidget *parent) :
         profile = std::stoi(args.at(2).toStdString());
     FileEditor editor(args.at(1).toStdString(), profile);
 
-
-    lay->addWidget(list);
-    wdg->setLayout(lay);
-
+    ui->currentHealthBox->setValue(editor.current_health());
+ /*
     const auto& flist = flag::list();
     for (auto i = 0u; i < flist.size(); ++i) {
         auto itm = new QListWidgetItem(QString::fromStdString(flist[i].description));
         itm->setFlags(itm->flags() | Qt::ItemIsUserCheckable);
         itm->setCheckState(editor.get_flag(i) ? Qt::Checked : Qt::Unchecked);
         list->addItem(itm);
-    }
-
-    setCentralWidget(wdg);
-    QObject::connect(list, &QListWidget::itemChanged, this, &MainWindow::panico);
+    }*/
 }
 
 void MainWindow::panico(QListWidgetItem *itm) {
@@ -47,7 +42,7 @@ void MainWindow::panico(QListWidgetItem *itm) {
 
 MainWindow::~MainWindow()
 {
-
+    delete ui;
 }
 
 

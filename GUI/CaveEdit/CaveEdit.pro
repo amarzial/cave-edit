@@ -25,7 +25,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++14
 
-FORMS +=
+FORMS += \
+    mainwindow.ui
 
 HEADERS += \
     mainwindow.h \
