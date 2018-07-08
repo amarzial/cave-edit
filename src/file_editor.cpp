@@ -24,7 +24,7 @@ FileEditor::~FileEditor() { m_file.close(); }
 
 void FileEditor::set_flag(unsigned int id, bool active) {
   auto flist = flag::list();
-  if (id > flist.size()) {
+  if (id >= flist.size()) {
     throw "Trying to access an invalid flag";
     return;
   }
@@ -40,7 +40,7 @@ void FileEditor::set_flag(unsigned int id, bool active) {
 
 bool FileEditor::get_flag(unsigned int id) {
   auto flist = flag::list();
-  if (id > flist.size()) {
+  if (id >= flist.size()) {
     throw "Trying to access an invalid flag";
     return false;
   }

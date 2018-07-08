@@ -2,6 +2,7 @@
 #define __FLAG__
 
 #include <vector>
+#include <string>
 
 namespace flag {
 struct FlagElem {
@@ -10,12 +11,7 @@ struct FlagElem {
   std::string description;
 };
 
-const std::vector<FlagElem>& list() {
-  static std::vector<FlagElem> s_list = {
-#include "flag_data.hpp"
-  };
-  return s_list;
-}
+const std::vector<FlagElem>& list();
 }
 
 #endif

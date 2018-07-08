@@ -23,7 +23,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 
-
+CONFIG += c++14
 
 FORMS +=
 
@@ -42,4 +42,5 @@ SOURCES += \
     mainwindow.cpp \
     caveedit/file_editor.cpp \
     caveedit/utils.cpp \
-    caveedit/weapon.cpp
+    caveedit/weapon.cpp \
+    caveedit/flag.cpp
